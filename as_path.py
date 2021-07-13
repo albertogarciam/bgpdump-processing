@@ -12,8 +12,6 @@ AS numbers between brackets, e.g. {234 456}, is considered.
 Prepending: same AS appearing consecutively in an as_path more than one.
 E.g.: in '234 87 87 87 561', 87 is prepended.
 Note that this is NOT prepending: '87 678 87'.
-
-
 '''
 
 # These utilities are defined in this file as functions. 
