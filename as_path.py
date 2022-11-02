@@ -144,3 +144,29 @@ def is_as_in_aspath(asn:str, as_path:str) -> bool:
 
     # always check for surrounding spaces, to be sure the asn is complete
     return as_path.startswith(asn + ' ') or (' ' + asn + ' ' in as_path) or as_path.endswith(' ' + asn)
+
+
+def maximum_common_path(as_path1: str, as_path2:str) -> str:
+    '''Returns the string with the most common ASes, from route's origin,
+    (rightmost ASes) for the two aspath provided.
+    Does not remove prepending (if it exists). '''
+
+    if (as_path1.strip() == "") or (as_path2.strip() == ""):
+        return ""
+    aspath_list1 = reversed(as_path1.strip().split())
+    aspath_list2 = list(reversed(as_path2.strip().split()))
+
+    common_aspath = []
+
+    max_position2 = len(aspath_list2) -1
+
+    for position, as1 in enumerate(aspath_list1):
+        if position > max_position2:
+            break
+
+        if (aspath_list2[position]).strip() == as1.strip():
+            common_aspath.append(as1.strip())
+        else:
+            break
+    
+    return (' '.join(reversed(common_aspath))).strip()

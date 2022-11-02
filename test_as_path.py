@@ -3,7 +3,7 @@
 '''Tests for as_path utilities.'''
 
 import pytest
-from as_path import as_path_remove_prepending, is_as_path, as_path_length, as_path_length_no_prepending, origin_as, closest_as, is_as_in_aspath
+from as_path import as_path_remove_prepending, is_as_path, as_path_length, as_path_length_no_prepending, origin_as, closest_as, is_as_in_aspath, maximum_common_path
 
 # test vectors: (input, expected_value)
 IS_AS_PATH = [
@@ -130,6 +130,23 @@ AS_IN_AS_PATH = [
 
 ]
 
+MAX_COMMON = [
+    ("3 2 1", "3 2 1", "3 2 1"),
+    ("33 22 11", "33 22 11", "33 22 11"),
+    (" 44 33 22 11", "33 22 11 ", "33 22 11"),
+    (" 44 33 22 11", " 11 ", "11"),
+
+    ("2 1", "1 ", " 1"),
+    (" 1 ", "1", "1"),
+
+
+    ("33 22 11", "33 22", ""),
+    ("", "", ""),
+    ("3 2 1", "", ""),
+    ("5 6 7", "1 2 3", ""),
+]
+
+
 @pytest.mark.parametrize("input,expected", IS_AS_PATH)
 def test_is_as_path(input, expected):
     assert is_as_path(input) == expected
@@ -176,3 +193,10 @@ def test_closest_as_raise(input ):
 @pytest.mark.parametrize("input1,input2,expected", AS_IN_AS_PATH)
 def test_as_in_as_path(input1, input2, expected):
     assert is_as_in_aspath(input1, input2) == expected
+
+
+# test common origin (from right to left)
+@pytest.mark.parametrize("as1,as2,common", MAX_COMMON)
+def test_is_common_path(as1, as2, common):
+    assert maximum_common_path(as1, as2) == common.strip()
+    assert maximum_common_path(as2, as1) == common.strip()
