@@ -104,10 +104,11 @@ def as_path_remove_prepending(as_path: str ) -> str:
     return aspath_final_str
 
     
-def origin_as(as_path: str) -> str:
+def origin_as(as_path: str, accept_set: bool = False) -> str:
     '''Return the string representing the AS number 
     from which the route was originated (rightmost as).
-    Generates an exception if the origin AS is an AS_SET.'''
+    Generates an exception if the origin AS is an AS_SET (unless 
+    accept_set is True).'''
 
     if as_path == "":
         return ""
@@ -115,7 +116,7 @@ def origin_as(as_path: str) -> str:
 
     as_path_list = as_path.strip().split()
     last = as_path_list[-1]
-    if '}' in last:
+    if not accept_set and '}' in last:
         raise Exception
 
     return last
