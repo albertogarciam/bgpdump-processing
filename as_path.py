@@ -107,7 +107,7 @@ def as_path_remove_prepending(as_path: str ) -> str:
 def origin_as(as_path: str, accept_set: bool = False) -> str:
     '''Return the string representing the AS number 
     from which the route was originated (rightmost as).
-    Generates an exception if the origin AS is an AS_SET (unless 
+    Generates an ValueError exception if the origin AS is an AS_SET (unless 
     accept_set is True).'''
 
     if as_path == "":
@@ -117,10 +117,28 @@ def origin_as(as_path: str, accept_set: bool = False) -> str:
     as_path_list = as_path.strip().split()
     last = as_path_list[-1]
     if not accept_set and '}' in last:
-        raise Exception
+        raise ValueError
 
     return last
 
+def neighbor_to_origin_as(as_path: str) -> str:
+    '''Returns the string representing the AS number 
+    of the first neighbor to the route origin.
+    Returns "" if there is a single element
+    Generates an exception if the closest AS is an AS_SET.'''
+
+    if as_path == "":
+        return ""
+
+    as_path_list = as_path.strip().split()
+    if len(as_path_list) <=1:
+        return ""
+
+    first = as_path_list[-2]
+    if '{' in first:
+        raise ValueError
+
+    return first
     
 def closest_as(as_path: str) -> str:
     '''Returns the string representing the AS number 
@@ -133,7 +151,7 @@ def closest_as(as_path: str) -> str:
     as_path_list = as_path.strip().split()
     first = as_path_list[0]
     if '{' in first:
-        raise Exception
+        raise ValueError
 
     return first
 
@@ -148,7 +166,7 @@ def is_as_in_aspath(asn:str, as_path:str) -> bool:
 
     # easy check to see if an as_path is passed
     if ' ' in asn:
-        raise Exception
+        raise ValueError
 
     # always check for surrounding spaces, to be sure the asn is complete
     return as_path.startswith(asn + ' ') or (' ' + asn + ' ' in as_path) or as_path.endswith(' ' + asn)
