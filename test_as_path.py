@@ -3,7 +3,7 @@
 '''Tests for as_path utilities.'''
 
 import pytest
-from as_path import as_path_remove_prepending, is_as_path, as_path_length, as_path_length_no_prepending, origin_as, closest_as, is_as_in_aspath, maximum_common_path
+from as_path import as_path_remove_prepending, is_as_path, as_path_length, as_path_length_no_prepending, origin_as, closest_as, is_as_in_aspath, maximum_common_path, count_ases
 
 # test vectors: (input, expected_value)
 IS_AS_PATH = [
@@ -61,6 +61,18 @@ AS_PATH_LENGTH = [
     ("{22}     4", 2),
 ]
 
+
+COUNT_ASES = [
+    ("", 0),
+    (" 22222 ", 1),
+    ("1 2 3", 3),
+
+    ("{22 22 2}", 3),   # difference with as_path length
+    ("{22}", 1),        
+    ("2     {22 22 2}", 4), # difference with as_path length
+    ("34 {22 22 2}   67", 5), # difference with as_path length
+    ("{22}     4", 2), 
+]
 
 AS_PATH_LENGTH_NO_PREPENDING = [
     ("", 0),
@@ -160,6 +172,12 @@ def test_remove_prepending(input, expected):
 @pytest.mark.parametrize("input,expected", AS_PATH_LENGTH)
 def test_as_path_length(input, expected):
     assert as_path_length(input) == expected
+
+@pytest.mark.parametrize("input,expected", COUNT_ASES)
+def test_count_ases(input, expected):
+    assert count_ases(input) == expected
+
+
 
 
 @pytest.mark.parametrize("input,expected", AS_PATH_LENGTH_NO_PREPENDING)

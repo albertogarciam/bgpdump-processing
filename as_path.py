@@ -47,6 +47,13 @@ def as_path_length(as_path: str)-> int:
     return as_count
 
 
+def count_ases(as_path: str) -> int:
+    '''Counts ases in an as path, including prepended (repeated) occurrences.
+    ASes inside AS_SETs are also counted - i.e., '{34 56 67}' counts as 3.'''
+
+    return len(as_path.strip().split())
+
+
 def as_path_length_no_prepending(as_path: str )-> int:
     '''Counts as path length after removing prepended occurrences.
     AS_SETs count as 1 (see RFC4271, sect 9.1.2.2).
